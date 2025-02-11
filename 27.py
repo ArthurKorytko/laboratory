@@ -1,7 +1,7 @@
 import aiohttp
 import asyncio
 
-# Лабораторна робота 25, завдання 1 Коритко Артур
+# Лабораторна робота 27, завдання 1 Коритко Артур
 
 
 async def fetch(url, session):
@@ -19,7 +19,7 @@ async def fetch_all():
         results = await asyncio.gather(*(fetch(url, session) for url in urls))
     print(results)
 
-# Лабораторна робота 25, завдання 2 Коритко Артур
+# Лабораторна робота 27, завдання 2 Коритко Артур
 
 
 async def num_generator():
@@ -32,7 +32,7 @@ async def print_numbers():
     async for n in num_generator():
         print(n)
 
-# Лабораторна робота 25, завдання 3 Коритко Артур
+# Лабораторна робота 27, завдання 3 Коритко Артур
 
 
 async def fetch_with_error(url):
