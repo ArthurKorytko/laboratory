@@ -24,9 +24,9 @@ def add_book(title, author, year, genre):
         cursor.execute("INSERT INTO books (title, author, year, genre) VALUES (?, ?, ?, ?)",
                        (title, author, year, genre))
         conn.commit()
-        print(f"✅ Книга '{title}' добавлена в библиотеку!")
+        print(f"Книга '{title}' добавлена в библиотеку!")
     except sqlite3.Error as e:
-        print(f"❌ Ошибка при добавлении книги: {e}")
+        print(f"Ошибка при добавлении книги: {e}")
     finally:
         conn.close()
 
@@ -40,14 +40,14 @@ def show_all_books():
         conn.close()
 
         if books:
-            print("\n📚 Все книги в библиотеке:")
+            print("\nВсе книги в библиотеке:")
             for book in books:
                 print(
                     f"{book[0]}. {book[1]} - {book[2]} ({book[3]}) [{book[4]}]")
         else:
-            print("⚠️ Библиотека пуста!")
+            print("Библиотека пуста!")
     except sqlite3.Error as e:
-        print(f"❌ Ошибка при получении книг: {e}")
+        print(f"Ошибка при получении книг: {e}")
 
 
 def show_books_by_genre():
@@ -60,13 +60,13 @@ def show_books_by_genre():
         conn.close()
 
         if books:
-            print(f"\n📚 Книги в жанре '{genre}':")
+            print(f"\nКниги в жанре '{genre}':")
             for book in books:
                 print(f"{book[1]} - {book[2]} ({book[3]})")
         else:
-            print(f"⚠️ Нет книг в жанре '{genre}'.")
+            print(f"Нет книг в жанре '{genre}'.")
     except sqlite3.Error as e:
-        print(f"❌ Ошибка при поиске книг: {e}")
+        print(f"Ошибка при поиске книг: {e}")
 
 
 def update_book_year():
@@ -83,13 +83,13 @@ def update_book_year():
         conn.commit()
 
         if cursor.rowcount > 0:
-            print(f"✅ Год издания книги '{title}' обновлен до {new_year}!")
+            print(f"Год издания книги '{title}' обновлен до {new_year}!")
         else:
-            print(f"⚠️ Книга '{title}' не найдена в библиотеке.")
+            print(f"Книга '{title}' не найдена в библиотеке.")
     except ValueError:
-        print("❌ Ошибка: год должен быть числом!")
+        print("Ошибка: год должен быть числом!")
     except sqlite3.Error as e:
-        print(f"❌ Ошибка при обновлении книги: {e}")
+        print(f"Ошибка при обновлении книги: {e}")
     finally:
         conn.close()
 
@@ -105,9 +105,9 @@ def delete_book():
         if cursor.rowcount > 0:
             print(f"🗑 Книга '{title}' удалена!")
         else:
-            print(f"⚠️ Книга '{title}' не найдена.")
+            print(f"Книга '{title}' не найдена.")
     except sqlite3.Error as e:
-        print(f"❌ Ошибка при удалении книги: {e}")
+        print(f"Ошибка при удалении книги: {e}")
     finally:
         conn.close()
 
@@ -116,7 +116,7 @@ def menu():
     create_database()
 
     while True:
-        print("\n📖 Меню библиотеки:")
+        print("\nМеню библиотеки:")
         print("1. Добавить книгу")
         print("2. Показать все книги")
         print("3. Найти книги по жанру")
@@ -135,7 +135,7 @@ def menu():
                 year = int(year)
                 add_book(title, author, year, genre)
             except ValueError:
-                print("❌ Ошибка: год должен быть числом!")
+                print("Ошибка: год должен быть числом!")
         elif choice == "2":
             show_all_books()
         elif choice == "3":
@@ -145,10 +145,10 @@ def menu():
         elif choice == "5":
             delete_book()
         elif choice == "6":
-            print("👋 Выход из программы.")
+            print("Выход из программы.")
             break
         else:
-            print("⚠️ Неизвестная команда, попробуйте еще раз.")
+            print("Неизвестная команда, попробуйте еще раз.")
 
 
 if __name__ == "__main__":
