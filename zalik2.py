@@ -8,7 +8,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from datetime import datetime, timedelta
 
-TOKEN = "7961861283:AAFhVGpzYLdfBdAg_GZ39OiE6S3OMA7Erwk"
+TOKEN = "-"
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
@@ -36,7 +36,7 @@ async def send_notifications():
         cursor.execute("SELECT id, user_id, text FROM tasks WHERE deadline <= ?",
                        (now.strftime('%m-%d %H:%M'),))
         for task_id, user_id, text in cursor.fetchall():
-            await bot.send_message(user_id, f"⏰ Напоминание! {text}")
+            await bot.send_message(user_id, f"1Напоминание! {text}")
             cursor.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
             conn.commit()
         await asyncio.sleep(60)
@@ -67,14 +67,14 @@ async def start(message: types.Message):
 
 @dp.message(F.text == "Добавить задачу")
 async def add_task_start(message: types.Message, state: FSMContext):
-    await message.answer("✍ Введите текст задачи:")
+    await message.answer("Введите текст задачи:")
     await state.set_state(TaskState.waiting_for_text)
 
 
 @dp.message(TaskState.waiting_for_text)
 async def add_task_text(message: types.Message, state: FSMContext):
     await state.update_data(text=message.text)
-    await message.answer("📅 Введите дату и время дедлайна в формате MM.DD HH:MM или напишите 'нет' для автоматического времени (через 1 час):")
+    await message.answer("Введите дату и время дедлайна в формате MM.DD HH:MM или напишите 'нет' для автоматического времени (через 1 час):")
     await state.set_state(TaskState.waiting_for_deadline)
 
 
@@ -91,14 +91,14 @@ async def add_task_deadline(message: types.Message, state: FSMContext):
         try:
             deadline = datetime.strptime(deadline_str, '%m.%d %H:%M')
         except ValueError:
-            await message.answer("❌ Неверный формат даты. Используйте MM.DD HH:MM")
+            await message.answer("Неверный формат даты. Используйте MM.DD HH:MM")
             return
 
     cursor.execute("INSERT INTO tasks (user_id, text, deadline) VALUES (?, ?, ?)",
                    (user_id, task_text, deadline.strftime('%m-%d %H:%M')))
     conn.commit()
 
-    await message.answer(f"✅ Задача добавлена: {task_text}\n⏳ Дедлайн: {deadline.strftime('%m-%d %H:%M')}")
+    await message.answer(f"Задача добавлена: {task_text}\nДедлайн: {deadline.strftime('%m-%d %H:%M')}")
     await state.clear()
 
 
@@ -109,9 +109,9 @@ async def list_tasks(message: types.Message):
     cursor.execute("SELECT id, text FROM tasks WHERE user_id = ?", (user_id,))
     tasks = cursor.fetchall()
     if not tasks:
-        await message.answer("📭 У вас нет задач.")
+        await message.answer("У вас нет задач.")
         return
-    await message.answer("📌 Ваши задачи:", reply_markup=get_tasks_markup(user_id))
+    await message.answer("Ваши задачи:", reply_markup=get_tasks_markup(user_id))
 
 
 @dp.message(F.text == "Удалить задачу")
@@ -120,9 +120,9 @@ async def delete_task_list(message: types.Message):
     cursor.execute("SELECT id, text FROM tasks WHERE user_id = ?", (user_id,))
     tasks = cursor.fetchall()
     if not tasks:
-        await message.answer("📭 У вас нет задач для удаления.")
+        await message.answer("У вас нет задач для удаления.")
         return
-    await message.answer("🗑 Выберите задачу для удаления:", reply_markup=get_tasks_with_delete_markup(user_id))
+    await message.answer("Выберите задачу для удаления:", reply_markup=get_tasks_with_delete_markup(user_id))
 
 
 @dp.callback_query()
@@ -135,14 +135,14 @@ async def handle_callback(callback: types.CallbackQuery):
             "SELECT text, deadline FROM tasks WHERE id = ? AND user_id = ?", (task_id, user_id))
         task = cursor.fetchone()
         if task:
-            await callback.message.answer(f"📌 {task[0]}\n⏳ Дедлайн: {task[1]}")
+            await callback.message.answer(f"{task[0]}\n Дедлайн: {task[1]}")
         else:
-            await callback.message.answer("❌ Задача не найдена.")
+            await callback.message.answer("Задача не найдена.")
     elif action == "delete":
         cursor.execute(
             "DELETE FROM tasks WHERE id = ? AND user_id = ?", (task_id, user_id))
         conn.commit()
-        await callback.message.answer("✅ Задача удалена.")
+        await callback.message.answer("Задача удалена.")
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
